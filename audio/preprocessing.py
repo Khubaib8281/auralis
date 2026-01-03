@@ -1,7 +1,9 @@
 import torch
 import torchaudio
 import torch.nn.functional as F
-from core.config import SAMPLE_RATE, DEVICE, N_MELS
+from core.config import SAMPLE_RATE, DEVICE, N_MELS, TARGET_LEN
+from Pydub import AudioSegment
+import numpy as np
 
 mel_transform = torchaudio.transforms.MelSpectrogram(
     sample_rate = SAMPLE_RATE,
@@ -12,13 +14,71 @@ mel_transform = torchaudio.transforms.MelSpectrogram(
 
 amp_to_db = torchaudio.transforms.AmplitudeToDB().to(DEVICE)
 
+# def load_audio(path: str) -> torch.Tensor:
+#     wav, sr = torchaudio.load(path)
+#     if sr != SAMPLE_RATE:
+#         wav = torchaudio.transforms.Resample(wav, sr, SAMPLE_RATE)
+#     if wav.shape[0] > 1:
+#         wav = wav.mean(dim = 0)
+#     return wav.to(DEVICE)  
+
+import torch
+import torchaudio
+import torch.nn.functional as F
+import numpy as np
+from pydub import AudioSegment
+
+class AudioLoadError(Exception):
+    pass
+
 def load_audio(path: str) -> torch.Tensor:
-    wav, sr = torchaudio.load(path)
+    waveform = None
+    sr = None
+
+    # --- primary loader ---
+    try:
+        waveform, sr = torchaudio.load(path)
+    except Exception as e1:
+        # --- fallback loader ---
+        try:
+            audio = AudioSegment.from_file(path)
+            audio = audio.set_channels(1).set_frame_rate(SAMPLE_RATE)
+            samples = np.array(audio.get_array_of_samples(), dtype=np.float32)
+            if samples.size == 0:
+                raise AudioLoadError("Empty audio file")
+
+            waveform = torch.from_numpy(samples)
+            sr = SAMPLE_RATE
+
+        except Exception as e2:
+            raise AudioLoadError(
+                f"Failed to decode audio file: {str(e2)}"
+            ) from e2
+
+    # ---- sanity checks ----
+    if waveform is None or waveform.numel() == 0:
+        raise AudioLoadError("Loaded audio is empty")
+
+    # mono
+    if waveform.dim() > 1:
+        waveform = waveform.mean(dim=0)
+
+    # resample
     if sr != SAMPLE_RATE:
-        wav = torchaudio.transforms.Resample(wav, sr, SAMPLE_RATE)
-    if wav.shape[0] > 1:
-        wav = wav.mean(dim = 0)
-    return wav.to(DEVICE)  
+        waveform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)(waveform)
+
+    # duration control
+    if waveform.numel() < TARGET_LEN:
+        raise AudioLoadError("Audio too short for analysis")
+
+    if waveform.numel() > TARGET_LEN:
+        waveform = waveform[:TARGET_LEN]
+    else:
+        waveform = F.pad(waveform, (0, TARGET_LEN - waveform.numel()))
+
+    return waveform.float()
+
+
 
 def waveform_to_mel(waveform: torch.Tensor):
     """
