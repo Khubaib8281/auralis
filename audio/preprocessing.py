@@ -2,7 +2,7 @@ import torch
 import torchaudio
 import torch.nn.functional as F
 from core.config import SAMPLE_RATE, DEVICE, N_MELS, TARGET_LEN
-from Pydub import AudioSegment
+from pydub import AudioSegment
 import numpy as np
 
 mel_transform = torchaudio.transforms.MelSpectrogram(
