@@ -1,0 +1,14 @@
+model:
+  name: ecapa_fatigue
+  version: 1.0.0
+  encoder: ecapa_tdnn
+  embedding_dim: 192
+  sampling_rate: 16000
+  N_mels: 80
+scoring:
+  method: calibrated_sigmoid
+  raw_low_percentile: 5
+  raw_high_percentile: 95
+preprocessing:
+  mono: True
+  target_len: 48000
