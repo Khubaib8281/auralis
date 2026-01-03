@@ -15,10 +15,20 @@ amp_to_db = torchaudio.transforms.AmplitudeToDB().to(DEVICE)
 def load_audio(path: str) -> torch.Tensor:
     wav, sr = torchaudio.load(path)
     if sr != SAMPLE_RATE:
-        wav = torchaudio.transform.resample(wav, sr, SAMPLE_RATE)
+        wav = torchaudio.transforms.Resample(wav, sr, SAMPLE_RATE)
     if wav.shape[0] > 1:
         wav = wav.mean(dim = 0)
     return wav.to(DEVICE)  
+
+def waveform_to_mel(waveform: torch.Tensor):
+    """
+    waveform: [T]
+    returns: [1, T, N_MELS]
+    """
+    mel = mel_transform(waveform.unsqueeze(0))   # [1, n_mels, frames]
+    mel = amp_to_db(mel)
+    mel = mel.transpose(1, 2)                     # [1, frames, n_mels]
+    return mel
 
 def pad_time_dim(mel):
     T = mel.shape[1]

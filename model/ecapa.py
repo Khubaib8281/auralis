@@ -2,7 +2,9 @@ import torch
 import torchaudio
 from speechbrain.lobes.models.ECAPA_TDNN import ECAPA_TDNN
 from core.config import MODEL_DIR, DEVICE, N_MELS
+from audio.preprocessing import waveform_to_mel
 import numpy as np
+
 
 class ECAPAENCODER:
     def __init__(self):
@@ -26,19 +28,20 @@ class ECAPAENCODER:
         """
 
         # ---- safety checks ----
+        if waveform.dim() == 2 and waveform.shape[0] == 1:
+            waveform = waveform.squeeze(0)
         if waveform.dim() != 1:
             raise ValueError(f"Expected waveform [T], got {waveform.shape}")
 
         waveform = waveform.float().to(DEVICE)
-        waveform = waveform.unsqueeze(0)          # [1, T]
+        # waveform = waveform.unsqueeze(0)          # [1, T]
 
-        mel = mel_transform(waveform)              # [1, n_mels, frames]
-        mel = amp_to_db(mel)
+        mel = waveform_to_mel(waveform)              # [1, n_mels, frames]
 
-        if mel.dim() == 4:
-            mel = mel.squeeze(1)
+        # if mel.dim() == 4:
+        #     mel = mel.squeeze(1)
 
-        mel = mel.transpose(1, 2).contiguous()     # [1, T, n_mels]
+        # mel = mel.transpose(1, 2).contiguous()     # [1, T, n_mels]
 
         # ---- critical debug line (keep this while testing) ----
         print("ECAPA INPUT SHAPE:", mel.shape)
