@@ -9,6 +9,7 @@ REF_EMB = "/home/khubaib/projects/vocal_fatigue_scoring/data/reference_embedding
 SAMPLE_RATE = 16000
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 TARGET_SEC = 5
+N_MELS = 80
 TARGET_LEN = SAMPLE_RATE * TARGET_SEC
 
 print(f"Model directory is set to: {MODEL_DIR}")
