@@ -5,6 +5,14 @@ from model.scorer import fatigue_score_0_to_100
 from fastapi.responses import JSONResponse
 import numpy as np
 from utils.file_utils import save_temp_audio
+from core.config import LOW_PERCENTILE, HIGH_PERCENTILE, FATIGUE_AXIS, REF_C_H
+
+C_h = np.load(REF_C_H)
+fatigue_axis = np.load(FATIGUE_AXIS)
+low = float(np.load(LOW_PERCENTILE)["arr_0"])
+high = float(np.load(HIGH_PERCENTILE)["arr_0"])
+
+
 
 router = APIRouter()
 
@@ -17,5 +25,5 @@ async def score_voice(file: UploadFile = File(...)):
     features = extract_features(wav)
     wav = wav.squeeze()
     emb = encoder.encode(wav)
-    score = float(fatigue_score_0_to_100(emb))
+    score = float(fatigue_score_0_to_100(emb, C_h, fatigue_axis, low, high))
     return {"fatigue_score": score}   
