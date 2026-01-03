@@ -15,9 +15,13 @@ def load_audio(path: str) -> torch.Tensor:
     wav, sr = torchaudio.load(path)
     if sr != SAMPLE_RATE:
         wav = torchaudio.transform.resample(wav, sr, SAMPLE_RATE)
-    return wav.to(DEVICE)
+    if wav.shape[0] > 1:
+        wav = wav.mean(dim = 0)
+    return wav.to(DEVICE)  
 
 def extract_features(wav: torch.Tensor) -> torch.Tensor:
-    mel = mel_transform(wav)
-    mel_db = amp_to_db(mel)
-    return mel
+    mel = mel_transform(wav.unsqueeze(0))
+    mel = amp_to_db(mel)
+    if mel.dim == 4:
+        mel = mel.squeeze(0)
+    return mel.transpose(1, 2)  # [B, T, N_MELS]
