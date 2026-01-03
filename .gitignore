@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Audio / temp files
+audio/*.wav
+audio/*.opus
+tmp/
+*.tmp
+
+# Models / embeddings
+model/*.pt
+model/*.pth
+checkpoints/
+reference_embeddings.npy
+
+# Logs
+*.log
+runs/
+
+# OS
+.DS_Store
+Thumbs.db
