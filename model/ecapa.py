@@ -1,13 +1,16 @@
 import torch
 import torchaudio
 from speechbrain.lobes.models.ECAPA_TDNN import ECAPA_TDNN
+from app.core.config import MODEL_DIR, DEVICE
+import numpy as np
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-N_MELS = 80
-checkpoint = torch.load("/home/khubaib/projects/vocal_fatigue_scoring/models/ecapa_supcon_model.pth", map_location=DEVICE)   
+class ECAPAENCODER:
+    def __init__(self):
+        self.ecapa = torch.load(MODEL_SIR, map_location=DEVICE)
+        self.ecapa.eval()
 
-ecapa = ECAPA_TDNN(input_size=N_MELS, lin_neurons=192, channels = [512, 512, 512],kernel_sizes=[5, 3, 3], dilations=[1, 2 , 3])
-
-ecapa.load_state_dict(checkpoint['ecapa_state_dict'])
-
-print("loaded")   
+    @torch.no_grad()
+    def encode(self, features: torch.Tensor) -> torch.Tesnor:
+        emb = self.ecapa(features)
+        emb = torch.nn.functional.normalize(emb, dim=-1)
+        return emb
