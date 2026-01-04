@@ -1,12 +1,14 @@
 from fastapi import File, UploadFile, APIRouter
 from audio.preprocessing import load_audio, extract_features
 from model.ecapa import ECAPAENCODER
+# from model.scorer import fatigue_score_0_to_100, prosody_score  ## for prosody scoring
 from model.scorer import fatigue_score_0_to_100
 from fastapi.responses import JSONResponse
 import numpy as np
 from utils.logger import logger
 from utils.file_utils import save_temp_audio
 from core.config import LOW_PERCENTILE, HIGH_PERCENTILE, FATIGUE_AXIS, REF_C_H
+# from audio.feature_extractor import get_prosody_stats
 from fastapi import HTTPException, status
 
 
@@ -35,8 +37,11 @@ async def score_voice(file: UploadFile = File(...)):
     validate_audio_file(file.filename)
     path = save_temp_audio(file)
     wav = load_audio(path)
+    # prosody_features = get_prosody_stats(wav)
+    # p_score, report = prosody_score(prosody_features)
     features = extract_features(wav)
     wav = wav.squeeze()
     emb = encoder.encode(wav)
     score = float(fatigue_score_0_to_100(emb, C_h, fatigue_axis, low, high))
-    return {"fatigue_score": score}   
+    # return {"fatigue_score": score, "prosody_score": p_score, "prosody_report": report}
+    return {"fatigue_score" : score}

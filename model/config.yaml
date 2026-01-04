@@ -12,3 +12,9 @@ scoring:
 preprocessing:
   mono: True
   target_len: 48000
+prosody_thresholds:
+  pitch_mean: [110, 180]       # Hz
+  pitch_std: [5, 40]           # Hz
+  jitter: [0.0, 0.5]           # %
+  shimmer: [0.0, 1.0]          # %
+  hnr: [10, 30]                # dB

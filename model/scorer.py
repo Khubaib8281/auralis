@@ -1,5 +1,6 @@
 from core.config import LOW_PERCENTILE, HIGH_PERCENTILE, FATIGUE_AXIS, REF_C_H
 import numpy as np
+from core.config import CONFIG
 
 
 C_h = np.load(REF_C_H)
@@ -51,3 +52,18 @@ def fatigue_score_0_to_100(embedding, C_h, fatigue_axis, raw_low, raw_high, meth
 
     # Ensure the output is float and bounded
     return float(np.clip(score, 0, 100))
+
+
+# def prosody_score(prosody_feats):
+#     report = []
+#     thresholds = CONFIG['prosody_thresholds']
+
+#     for feat, val in prosody_feats.items():
+#         low, high = thresholds[feat]
+#         if val < low:
+#             report.append(f"{feat} is low → potential fatigue")
+#         elif val > high:
+#             report.append(f"{feat} is high → potential fatigue")
+    
+#     score = len(report)  # simple count, or map to 0-100 if needed
+#     return score, report
