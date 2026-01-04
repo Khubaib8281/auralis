@@ -22,5 +22,5 @@ audio:
   min_duration: 5.0            # seconds
   max_duration: 10.0           # seconds
   allow_trim: False
-  allowed_formats: ['.wav', '.mp4a', '.mp3']
+  allowed_formats: ['.wav', '.m4a', '.mp3']
   required_sampling_rate: 16000

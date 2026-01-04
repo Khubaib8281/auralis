@@ -31,3 +31,9 @@ runs/
 # OS
 .DS_Store
 Thumbs.db
+
+*.mp3
+*.m4a
+*.ogg
+*.flac
+*.opus

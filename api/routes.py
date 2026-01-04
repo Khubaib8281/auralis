@@ -18,24 +18,6 @@ fatigue_axis = np.load(FATIGUE_AXIS)
 low = float(np.load(LOW_PERCENTILE)["arr_0"])
 high = float(np.load(HIGH_PERCENTILE)["arr_0"])
 
-# def validate_audio_file(filepath: str, original_filename: str):
-#     ext  = original_filename.lower().rsplit(".", 1)[-1]
-#     ext = "." + ext
-#     if ext not in ALLOWED_EXTENSIONS:
-#         logger.warning(f"Unsupported file format received: {original_filename}")
-#         raise HTTPException(
-#             status_code = status.HTTP_400_BAD_REQUEST,
-#             detail = "Unsupported file type. Allowed formats are: " + ", ".join(ALLOWED_EXTENSIONS)
-#         )
-    
-#     try:
-#         validate_audio_duration(filename, max_duration=MAX_DURATION_SEC)
-#     except Exception as e:
-#         logger.warning(f"Audio validation error for file {filename}: {str(e)}")
-#         raise HTTPException(
-#             status_code = status.HTTP_400_BAD_REQUEST,
-#             detail = str(e)
-#         )
 router = APIRouter()
 
 encoder = ECAPAENCODER()
@@ -58,7 +40,7 @@ async def score_voice(file: UploadFile = File(...)):
         score = float(fatigue_score_0_to_100(emb, C_h, fatigue_axis, low, high))
         # return {"fatigue_score": score, "prosody_score": p_score, "prosody_report": report}
         return {"fatigue_score" : score}
-        
+
     except AudioValidationError as e:
         logger.warning(str(e))
         raise HTTPException(
