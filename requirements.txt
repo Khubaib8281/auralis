@@ -3,7 +3,8 @@ pytest
 fastapi
 torchaudio==2.1.1
 speechbrain
-numpy
+numpy==1.26.4
 pathlib
 pydub
 uvicorn
+soundfile
