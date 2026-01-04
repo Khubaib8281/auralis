@@ -4,13 +4,13 @@ import yaml
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-MODEL_DIR = "/home/khubaib/projects/vocal_fatigue_scoring/models/ecapa_supcon_model.pth"
-REF_EMB = "/home/khubaib/projects/vocal_fatigue_scoring/data/reference_embeddings_192-d.npy"
-REF_C_H = "/home/khubaib/projects/vocal_fatigue_scoring/data/centroid_healthy.npy"
-FATIGUE_AXIS = "/home/khubaib/projects/vocal_fatigue_scoring/data/fatigue_axis.npy"
-LOW_PERCENTILE = "/home/khubaib/projects/vocal_fatigue_scoring/data/low_percentile.npz"
-HIGH_PERCENTILE = "/home/khubaib/projects/vocal_fatigue_scoring/data/high_percentile.npz"
-CONFIG_PATH = "/home/khubaib/projects/vocal_fatigue_scoring/app/model/config.yaml"
+MODEL_DIR = f"{BASE_DIR}/models/ecapa_supcon_model.pth"
+REF_EMB = f"{BASE_DIR}/data/reference_embeddings_192-d.npy"
+REF_C_H = f"{BASE_DIR}/data/centroid_healthy.npy"
+FATIGUE_AXIS = f"{BASE_DIR}/data/fatigue_axis.npy"
+LOW_PERCENTILE = f"{BASE_DIR}/data/low_percentile.npz"
+HIGH_PERCENTILE = f"{BASE_DIR}/data/high_percentile.npz"
+CONFIG_PATH = f"{BASE_DIR}/model/config.yaml"
 
 SAMPLE_RATE = 16000
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -26,4 +26,4 @@ with open(CONFIG_PATH, "r") as f:
 
 print(f"Model directory is set to: {MODEL_DIR}")
 print(f"base dir: {BASE_DIR}")
-print(f"base dir: {REF_EMB}")
+print(f"ref emb path: {REF_EMB}")
