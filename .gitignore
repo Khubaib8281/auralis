@@ -35,5 +35,6 @@ Thumbs.db
 *.mp3
 *.m4a
 *.ogg
+*.txt
 *.flac
 *.opus
