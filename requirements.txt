@@ -1,7 +1,7 @@
-torch
+torch==2.1.1
 pytest
 fastapi
-torchaudio
+torchaudio==2.1.1
 speechbrain
 numpy
 pathlib
