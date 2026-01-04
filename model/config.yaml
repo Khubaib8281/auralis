@@ -18,3 +18,9 @@ prosody_thresholds:
   jitter: [0.0, 0.5]           # %
   shimmer: [0.0, 1.0]          # %
   hnr: [10, 30]                # dB
+audio:
+  min_duration: 5.0            # seconds
+  max_duration: 10.0           # seconds
+  allow_trim: False
+  allowed_formats: ['.wav', '.mp4a', '.mp3']
+  required_sampling_rate: 16000

@@ -17,6 +17,9 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 TARGET_SEC = 5
 N_MELS = 80
 TARGET_LEN = SAMPLE_RATE * TARGET_SEC
+MAX_DURATION_SEC = 10.0
+MIN_DURATION_SEC = 5.0
+ALLOWED_EXTENSIONS = {".wav", ".mp3", ".m4a"}
 
 with open(CONFIG_PATH, "r") as f:
     CONFIG = yaml.safe_load(f)
