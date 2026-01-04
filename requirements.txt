@@ -8,3 +8,4 @@ pathlib
 pydub
 uvicorn
 soundfile
+python-multipart
